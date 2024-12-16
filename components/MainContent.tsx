@@ -1,185 +1,289 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-const taglines = [
-  "Instant Crypto to Fiat Swaps",
-  "Secure Peer-to-Peer Trading",
-  "Multiple Payment Methods",
-  "Low Transaction Fees",
-  "Global Coverage",
-];
+import { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useInView,
+} from "framer-motion";
+import {
+  IconArrowRight,
+  IconShieldLock,
+  IconCreditCard,
+  IconRocket,
+} from "@tabler/icons-react";
 
 const features = [
   {
     title: "Quick Swaps",
-    description: "Convert crypto to fiat in minutes through our P2P network.",
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-        />
-      </svg>
-    ),
+    description:
+      "Convert crypto to fiat in minutes with our optimized P2P network.",
+    icon: <IconRocket className="w-6 h-6 stroke-[1.5]" />,
   },
   {
     title: "Fiat Payments",
-    description: "Support for PayPal and other trusted payment methods.",
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
-        />
-      </svg>
-    ),
+    description:
+      "Multiple payment methods including PayPal and bank transfers.",
+    icon: <IconCreditCard className="w-6 h-6 stroke-[1.5]" />,
   },
   {
     title: "Escrow System",
-    description: "Every trade is secured through automated protection.",
-    icon: (
-      <svg
-        className="w-6 h-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-        />
-      </svg>
-    ),
+    description: "Automated protection for secure trading confidence.",
+    icon: <IconShieldLock className="w-6 h-6 stroke-[1.5]" />,
   },
 ];
 
-export default function MainContent() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const stats = [
+  { number: "5min", label: "Average Settlement" },
+  { number: "USDC", label: "Stablecoin Exchange" },
+  { number: "P2P", label: "Secure Network" },
+];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % taglines.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+export default function MainContent() {
+  const { scrollYProgress } = useScroll();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, margin: "-100px" });
+
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
   return (
-    <div className="space-y-32 py-16">
-      <section className="min-h-[60vh] flex items-center justify-center">
-        <div className="max-w-4xl w-full">
-          <div className="space-y-16 text-center">
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <h1 className="text-5xl md:text-6xl font-extralight text-slate-900 tracking-tight leading-[1.1]">
-                  Your Bridge Between
-                </h1>
-                <h1 className="text-5xl md:text-6xl bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent font-light pb-1">
-                  Crypto and Fiat
-                </h1>
-              </div>
-              <p className="h-6 text-lg font-light text-slate-600 tracking-wide">
-                {taglines[currentIndex]}
-              </p>
-              <div className="pt-8">
-                <a
-                  href="https://app.zwift.cash"
-                  className="group relative inline-flex items-center gap-2 px-8 py-3 text-sm text-slate-900 transition-colors"
-                >
-                  <span className="relative z-10">Get Started</span>
-                  <svg
-                    className="w-4 h-4 transition-transform group-hover:translate-x-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 transform translate-y-1.5 translate-x-1.5 bg-blue-600/10 rounded-lg transition-transform group-hover:translate-y-0 group-hover:translate-x-0" />
-                  <div className="absolute inset-0 border border-slate-900 rounded-lg" />
-                </a>
+    <main className="relative bg-white">
+      {/* Progress bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 origin-left z-50"
+        style={{ scaleX }}
+      />
+
+      {/* Hero Section */}
+      <section className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 sm:px-6">
+        <div className="absolute inset-0">
+          {/* Modern gradient background */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-50/40 via-white to-white" />
+
+          {/* Animated gradient orbs */}
+          <div className="absolute top-20 left-1/3 w-[800px] h-[800px] bg-blue-100/20 rounded-full blur-3xl animate-[pulse_8s_ease-in-out_infinite]" />
+          <div className="absolute bottom-20 right-1/3 w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-3xl animate-[pulse_8s_ease-in-out_infinite_1s]" />
+
+          {/* Subtle grid overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1.5px,transparent_1.5px),linear-gradient(to_right,rgba(59,130,246,0.02)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-30" />
+        </div>
+
+        <div className="relative z-10 max-w-screen-xl mx-auto w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center space-y-8 sm:space-y-14"
+          >
+            <div className="space-y-6 sm:space-y-10">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex justify-center"
+              >
+                <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-blue-50/80 to-blue-100/50 text-blue-600 text-xs sm:text-sm font-medium tracking-wide uppercase backdrop-blur-sm border border-blue-100/80">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500/80" />
+                  Next-Gen P2P Exchange
+                </span>
+              </motion.div>
+
+              <h1 className="relative">
+                <span className="block text-4xl sm:text-6xl md:text-7xl font-extralight tracking-tight text-slate-900">
+                  Trade Crypto & Fiat
+                </span>
+              </h1>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-20">
+                <div className="flex flex-col items-center">
+                  <div className="text-base text-slate-600 font-normal">
+                    Secure
+                  </div>
+                  <div className="text-xs text-slate-400 font-light">
+                    Multi-Sig Escrow
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <div className="text-base text-slate-600 font-normal">
+                    Fast
+                  </div>
+                  <div className="text-xs text-slate-400 font-light">
+                    5 Min Settlement
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <div className="text-base text-slate-600 font-normal">
+                    Reliable
+                  </div>
+                  <div className="text-xs text-slate-400 font-light">
+                    24/7 Trading
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-8">
-              <div className="space-y-2">
-                <p className="text-3xl font-extralight text-slate-900">Fast</p>
-                <p className="text-sm font-light text-slate-600 tracking-wide">
-                  5 Minute Settlement
-                </p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 px-4"
+            >
+              <a
+                href="https://app.zwift.cash"
+                className="w-full sm:w-auto group relative inline-flex justify-center px-6 sm:px-8 py-3.5 sm:py-4 bg-white text-slate-900 text-[15px] font-medium rounded-xl transition-all duration-300 hover:bg-slate-50 shadow-[0_0_0_1px_rgba(15,23,42,0.1)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.4)] hover:translate-y-[-1px]"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  Launch App
+                  <IconArrowRight
+                    className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                    strokeWidth={2}
+                  />
+                </span>
+              </a>
+              <a
+                href="https://docs2.zwift.cash"
+                className="w-full sm:w-auto group inline-flex justify-center items-center gap-2 px-6 py-3.5 text-slate-500 hover:text-blue-600 transition-colors duration-200 font-medium text-[15px]"
+              >
+                Documentation
+                <IconArrowRight
+                  className="w-4 h-4 transition-transform group-hover:translate-x-0.5"
+                  strokeWidth={2}
+                />
+              </a>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section
+        ref={ref}
+        className="py-12 sm:py-24 relative overflow-hidden px-4 sm:px-6"
+      >
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-50/40 via-white to-white" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1.5px,transparent_1.5px),linear-gradient(to_right,rgba(59,130,246,0.02)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-40" />
+        </div>
+        <div className="max-w-screen-xl mx-auto relative">
+          <motion.div
+            style={{
+              transform: isInView ? "none" : "translateY(40px)",
+              opacity: isInView ? 1 : 0,
+              transition: "all 0.8s cubic-bezier(0.17, 0.55, 0.55, 1)",
+            }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-16"
+          >
+            {stats.map((stat, index) => (
+              <div key={index} className="relative group text-center">
+                <div className="p-6 sm:p-8">
+                  <motion.div
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="text-3xl sm:text-4xl font-light text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-500 mb-2 sm:mb-3"
+                  >
+                    {stat.number}
+                  </motion.div>
+                  <div className="text-slate-600 font-medium text-xs sm:text-sm tracking-wide uppercase">
+                    {stat.label}
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <p className="text-3xl font-extralight text-slate-900">
-                  Secure
-                </p>
-                <p className="text-sm font-light text-slate-600 tracking-wide">
-                  P2P Trading System
-                </p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-3xl font-extralight text-slate-900">Low</p>
-                <p className="text-sm font-light text-slate-600 tracking-wide">
-                  Transaction Fees
-                </p>
-              </div>
-            </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 sm:py-32 relative overflow-hidden px-4 sm:px-6">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-50/40 via-white to-white" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1.5px,transparent_1.5px),linear-gradient(to_right,rgba(59,130,246,0.02)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-40" />
+        </div>
+
+        <div className="max-w-screen-xl mx-auto relative">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12 sm:mb-20"
+          >
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-light">
+              Exchange with Confidence
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="group relative"
+              >
+                <div className="relative p-6 sm:p-8 rounded-xl bg-white/80 backdrop-blur-sm border border-slate-100/80 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 hover:translate-y-[-2px]">
+                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white mb-4 sm:mb-6 shadow-lg shadow-blue-500/20">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-lg sm:text-xl font-medium mb-2 sm:mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-sm">
+                    {feature.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4">
-        <div className="text-center space-y-4 mb-16">
-          <h2 className="text-3xl font-light text-slate-900">
-            Exchange with Confidence
-          </h2>
-          <p className="text-lg font-light text-slate-600 max-w-2xl mx-auto">
-            Fast and secure peer-to-peer trading with trusted payment methods
-            and automated protection.
-          </p>
+      {/* CTA Section */}
+      <section className="py-16 sm:py-32 relative overflow-hidden px-4 sm:px-6">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-50/40 via-white to-white" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.02)_1.5px,transparent_1.5px),linear-gradient(to_right,rgba(59,130,246,0.02)_1.5px,transparent_1.5px)] bg-[size:48px_48px] opacity-40" />
         </div>
 
-        <div className="grid md:grid-cols-3 gap-12">
-          {features.map((feature, index) => (
-            <div key={index} className="relative group">
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/10 to-blue-800/10 rounded-xl blur-xl group-hover:blur-2xl transition-all opacity-0 group-hover:opacity-100" />
-              <div className="relative space-y-6 bg-white/50 backdrop-blur-sm p-8 rounded-xl border border-slate-200">
-                <div className="inline-block p-3 bg-blue-600/10 rounded-lg text-slate-900">
-                  {feature.icon}
-                </div>
-                <div>
-                  <h3 className="text-xl font-light text-slate-900 mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-600 font-light leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="max-w-screen-xl mx-auto relative">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center space-y-8"
+          >
+            <h2 className="text-2xl sm:text-4xl md:text-6xl font-extralight text-slate-900 leading-tight">
+              Ready to Start Trading?
+            </h2>
+            <motion.div className="pt-4">
+              <a
+                href="https://app.zwift.cash"
+                className="w-full sm:w-auto group relative inline-flex justify-center px-6 sm:px-8 py-4 bg-white text-slate-900 text-base font-medium rounded-xl transition-all duration-300 hover:bg-slate-50 shadow-[0_0_0_1px_rgba(15,23,42,0.1)] hover:shadow-[0_0_0_1px_rgba(59,130,246,0.4)] hover:translate-y-[-1px]"
+              >
+                <span className="relative z-10 flex items-center gap-3">
+                  Launch App
+                  <IconArrowRight
+                    className="w-5 h-5 transition-transform group-hover:translate-x-0.5"
+                    strokeWidth={2}
+                  />
+                </span>
+              </a>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

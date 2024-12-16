@@ -7,6 +7,7 @@ export const metadata = {
   title: "Zwift - Seamless Crypto to Fiat Exchange",
   description:
     "Your trusted platform for easy peer-to-peer crypto to fiat conversions. Fast, secure, and reliable.",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -15,8 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" className="light">
+      <head>
+        <meta name="color-scheme" content="light" />
+      </head>
+      <body className={`${inter.className} bg-white`}>{children}</body>
     </html>
   );
 }

@@ -20,7 +20,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="https://docs.zwift.cash"
+                  href="https://docs2.zwift.cash"
                   className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
                 >
                   Documentation
